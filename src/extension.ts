@@ -3,6 +3,10 @@
 import * as vscode from 'vscode';
 const { window, workspace } = vscode
 
+const pattern = new RegExp(escapeRegExp("TODO") + "|" + escapeRegExp("FIXME"), 'g')
+const decorationTypes = {};
+let timeout: any
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -44,15 +48,37 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 
   function getText() {
+    timeout && clearTimeout(timeout);
+    timeout = setTimeout(getText2, 0);
+  }
+  const decorationType = window.createTextEditorDecorationType({
+    color: '#fff',
+    backgroundColor: '#ffbd2a',
+  });
+  function getText2() {
     if (!activeEditor) {
       console.log("no active editor...")
       return
     }
-    console.log(activeEditor.document.getText())
+    const text = activeEditor.document.getText()
+    const ranges: vscode.Range[] = []
+    let match
+    while (match = pattern.exec(text)) {
+      var startPos = activeEditor.document.positionAt(match.index);
+      var endPos = activeEditor.document.positionAt(match.index + match[0].length);
+      console.log('added range', match[0], match.index, match.length, startPos.line + ":" + startPos.character, endPos.line + ":" + endPos.character)
+      ranges.push(new vscode.Range(startPos, endPos))
+    }
+
+    console.log("setting ranges", ranges)
+    activeEditor.setDecorations(decorationType, ranges)
   }
 }
 
 
+function escapeRegExp(s: string) {
+  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
