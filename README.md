@@ -6,7 +6,7 @@ Proofie is an experimental proof-reader for VSCode that helps you write better.
 
 ## Install
 
-You can install [proofie from the VSCode Marketplate](https://marketplace.visualstudio.com/items?itemName=MattMueller.proofie).
+You can install [proofie from the VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=MattMueller.proofie).
 
 Once you've installed the extension, open a markdown or text file and paste the following:
 
