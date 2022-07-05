@@ -8,6 +8,21 @@ Proofie is an experimental proof-reader for VSCode that helps you write better.
 
 You can install [proofie from the VSCode Marketplate](https://marketplace.visualstudio.com/items?itemName=MattMueller.proofie).
 
+Once you've installed the extension, open a markdown or text file and paste the following:
+
+```
+I was woken by a substantial kick in the butt by Mrs. Abigail.
+```
+
+You should see some highlights. Hover over those highlights to see the reason why they're flagged.
+
+Happy writing!
+
+## Supported File Extensions
+
+- .txt
+- .md
+
 ## Active Plugins
 
 - [retext-readability](https://github.com/retextjs/retext-readability)
