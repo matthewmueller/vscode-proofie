@@ -15,6 +15,12 @@ type Decoration = vscode.DecorationOptions & {
 
 type DecorationByType = Record<string, vscode.DecorationRenderOptions>
 
+// Only style markdown and plaintext files
+const acceptableLanguages: Record<string, boolean> = {
+  'plaintext': true,
+  'markdown': true,
+}
+
 export default class Proofie {
   private readonly disposables: vscode.Disposable[] = []
   private readonly decorationMap: Record<string, vscode.TextEditorDecorationType> = {}
@@ -61,13 +67,16 @@ export default class Proofie {
 
   // Render processes the text document and decorates the editor
   private render(editor: vscode.TextEditor) {
+    // Clear all decorations
+    for (let decorationType in this.decorationMap) {
+      editor.setDecorations(this.decorationMap[decorationType], [])
+    }
     const decorations = this.process(editor.document)
     // Segment decorations by types
     const segments: Map<vscode.TextEditorDecorationType, Decoration[]> = new Map()
     for (let decoration of decorations) {
       const decorationType = this.decorationMap[decoration.source]
       if (!decorationType) {
-        console.log('missing source', decoration.source)
         continue
       }
       const decorations = segments.get(decorationType) || []
@@ -80,8 +89,12 @@ export default class Proofie {
     }
   }
 
+
   // Process the text document
   private process(doc: vscode.TextDocument): Decoration[] {
+    if (!acceptableLanguages[doc.languageId]) {
+      return []
+    }
     const file = unified()
       .use(retextEnglish)
       .use(retextPassive)
