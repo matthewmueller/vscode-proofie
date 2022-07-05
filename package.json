@@ -12,6 +12,7 @@
   "activationEvents": [
     "*"
   ],
+  "publisher": "MattMueller",
   "main": "./out/extension.js",
   "repository": {
     "url": "https://github.com/matthewmueller/vscode-proofie"
